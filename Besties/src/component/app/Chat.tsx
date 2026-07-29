@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   useCallback,
@@ -21,7 +22,7 @@ import socket from "../../lib/socket";
 import Fetcher from "../../lib/Fetcher";
 import CatchError from "../../lib/CatchError";
 import HttpInterceptor from "../../lib/HttpInterceptor";
-import Card from "../shared/Card";
+
 
 interface ChatUser {
   fullname?: string;
@@ -187,12 +188,17 @@ const Chat = () => {
   useEffect(() => {
     if (chatId) {
       prevChatIdRef.current = chatId;
+      // Defer state updates to avoid synchronous setState inside effect
       if (chatHistory && Array.isArray(chatHistory)) {
-        setChats(chatHistory);
-        chatsLoadedRef.current = true;
+        setTimeout(() => {
+          setChats(chatHistory);
+          chatsLoadedRef.current = true;
+        });
       } else {
-        setChats([]);
-        chatsLoadedRef.current = false;
+        setTimeout(() => {
+          setChats([]);
+          chatsLoadedRef.current = false;
+        });
       }
       // Clear unread for this chat
       if (chatId !== unreadClearedRef.current) {

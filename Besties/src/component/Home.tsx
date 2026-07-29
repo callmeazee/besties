@@ -1,8 +1,9 @@
+import Dashboard from "./app/Dashboard"
 
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <Dashboard/>
   )
 }
 
